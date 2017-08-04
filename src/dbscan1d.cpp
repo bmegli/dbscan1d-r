@@ -74,7 +74,7 @@ IntegerVector dbscan1d(const NumericVector data, double eps, int minPoints, bool
 	
 	//use L to get back to original order for cluster labels
 	for(int i=0;i<N;++i)
-		L[i]=C[IND[i]];
+		L[IND[i]]=C[i];
 		
 	return L;
 }
