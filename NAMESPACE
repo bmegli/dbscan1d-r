@@ -1,0 +1,3 @@
+useDynLib(dbscan1d, .registration=TRUE)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)

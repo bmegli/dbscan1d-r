@@ -1,0 +1,12 @@
+Package: dbscan1d
+Type: Package
+Title: Efficient specialization of DBSCAN clustering algorithm for 1D data
+Version: 1.0
+Date: 2017-08-02
+Author: Bartosz Meglicki
+Maintainer: Bartosz Meglicki <meglickib@gmail.com>
+Description: A O(nlogn) pessimistic complexity implementation of DBSCAN (Density Based Clustering of Applications with Noise) optimized for 1D data. If data is already sorted the algorithm runs in O(n) time.
+License: GPL (>= 2)
+Imports: Rcpp (>= 0.12.12)
+LinkingTo: Rcpp
+RoxygenNote: 6.0.1
