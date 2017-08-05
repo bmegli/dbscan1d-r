@@ -135,8 +135,8 @@ Let's investigate dependence on input size:
 
 ```{r}
 #benchmark parameters
-N=3
-inputs=1000*2^(0:4)
+N=4
+inputs=1000*2^(0:N)
 times.dbscan1d=numeric(N)
 times.dbscan=numeric(N)
 
