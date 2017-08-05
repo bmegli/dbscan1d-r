@@ -12,5 +12,7 @@ LinkingTo: Rcpp
 VignetteBuilder: knitr
 Suggests: testthat,
           knitr,
-          microbenchmark
+          microbenchmark,
+          fpc,
+          dbscan 
 RoxygenNote: 6.0.1
