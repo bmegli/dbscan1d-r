@@ -145,24 +145,29 @@ points.distance=0.01
 clusters=4
 #we want to keep eps-neighborhood size ~ log(N) to let dbscan::dbscan work in (NlogN) time
 epses=points.distance*log2(ceiling(clusters*inputs))/2
-minPoints=4
+minPoints=10
 #benchmark
 for(i in 1:N)
 {
   data=test.data(clusters = clusters, points.distance = points.distance, points = inputs[i], separation.ratio = 1)
   data.matrix=as.matrix(data) #for dbscan::dbscan
   bench=microbenchmark(dbscan1d(data, epses[i], minPoints), dbscan::dbscan(data.matrix, epses[i], minPoints), times=1, unit="ms")
-  time.ms=summary(bench)$median
+  time.ms=summary(bench)$mean
   times.dbscan1d[i]=time.ms[1]
   times.dbscan[i]=time.ms[2]
 }
 
 ylim=c(min(c(log2(times.dbscan1d), log2(times.dbscan))), max(c(log2(times.dbscan1d), log2(times.dbscan) )))
 
-plot(1:N, log2(times.dbscan), type="p", col="red", ylim=ylim, ylab="log time", xlab="log input size")
-points(1:N, log2(times.dbscan1d), type="p", col="blue")
+plot(log2(inputs), log2(times.dbscan), type="p", ylim=ylim, ylab=expression(log[2](time)), xlab=expression(log[2](N)) , pch=3)
+points(log2(inputs), log2(times.dbscan1d), type="p", pch=4)
 
+# add nlogn plot in log/log space for comparison, the rintercept, chosen arbitrarily
+x=c(log2(inputs[1]), log2(inputs[N]))
+y=log2(c(inputs[1], inputs[N])*log2(c(inputs[1], inputs[N])))
+lines(x,y-12.5)
 
+legend("bottomright", legend=c("dbscan1d", "dbscan", "k*nlogn"), pch=c(3,4,NA_integer_), lty=c(0,0,1))
 ```
 
 
@@ -171,12 +176,12 @@ Let's investigate dependence on eps parameter
 
 ```{r}
 #data
-data=test.data(clusters = 4, points.distance = 0.01, points = 100, separation.ratio = 1)
+data=test.data(clusters = 4, points.distance = 0.01, points = 10000, separation.ratio = 1)
 data.matrix=as.matrix(data) #for dbscan::dbscan
 
 full.neighborhood=max(data)-min(data)
 
-epses=seq(from=0, to=full.neighborhood, length.out = 15)
+epses=seq(from=0.05, to=full.neighborhood/2, length.out = 10)
 N=length(epses)
 minPoints=4
 
@@ -187,7 +192,7 @@ times.dbscan=numeric(N)
 #benchmark
 for(i in 1:N)
 {
-  bench=microbenchmark(dbscan1d(data, epses[i], minPoints), dbscan::dbscan(data.matrix, epses[i], minPoints), times=100, unit="ms")
+  bench=microbenchmark(dbscan1d(data, epses[i], minPoints), dbscan::dbscan(data.matrix, epses[i], minPoints), times=10, unit="ms")
   time.ms=summary(bench)$mean
   times.dbscan1d[i]=time.ms[1]
   times.dbscan[i]=time.ms[2]
